@@ -1,5 +1,6 @@
+#include <stdlib.h>
 #include "libft.h"
-
+#include <stdio.h>
 char	addchars(char n1, char n2, char *reminder)
 {
 	int		a;
@@ -10,6 +11,7 @@ char	addchars(char n1, char n2, char *reminder)
 	b = n2 - '0';
 	r = a + b + (*reminder - '0');
 	*reminder = r > 9 ? '1' : '0';
+	r = r % 10;
 	return (r + '0');
 }
 
@@ -21,7 +23,7 @@ char	*ft_bigint_add(char *n1, char *n2)
 	int		d1;
 	int		d2;
 
-	result = malloc(ft_strlen(n1) + ft_strlen(n2) + 2 + 1 + 1);
+	result = ft_strnew(ft_strlen(n1) + ft_strlen(n2) + 2 + 1);
 	r = result;
 	ft_strrev(n1);
 	ft_strrev(n2);
@@ -40,12 +42,15 @@ char	*ft_bigint_add(char *n1, char *n2)
 		n2 += (d2 - d1);
 	}
 	reminder = '0';
+	printf("%d %d\n", d1, d2);
 	while (*n1 && *n2)
 	{
 		if (*n1 == '.' || *n2 == '.')
 		{
 			*result = '.';
 			result++;
+			n1++;
+			n2++;
 			continue;
 		}
 		*result = addchars(*n1, *n2, &reminder);
@@ -61,11 +66,13 @@ char	*ft_bigint_add(char *n1, char *n2)
 	}
 	while (*n2)
 	{
-		*result = addchars(*n1, '0', &reminder);
+		*result = addchars(*n2, '0', &reminder);
 		result++;
 		n2++;
 	}
-	return (r);
+	if (reminder == '1')
+		*result = '1';
+	return (ft_strrev(r));
 }
 
 
@@ -73,7 +80,7 @@ int		main(int argc, char **argv)
 {
 	char	*result;
 
-	if (argv == 3)
+	if (argc == 3)
 	{
 		result = ft_bigint_add(argv[1], argv[2]);
 		ft_putendl(result);
