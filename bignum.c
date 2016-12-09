@@ -72,10 +72,13 @@ char	*ft_bigint_add(char *n1, char *n2)
 	}
 	if (reminder == '1')
 		*result = '1';
+	ft_strrev(n1);
+	ft_strrev(n2);
 	return (ft_strrev(r));
 }
 
 
+/*
 int		main(int argc, char **argv)
 {
 	char	*result;
@@ -87,3 +90,4 @@ int		main(int argc, char **argv)
 		free(result);
 	}
 }
+*/
