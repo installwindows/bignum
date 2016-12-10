@@ -1,6 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   bignum.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: varnaud <varnaud@student.42.us.org>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/12/09 17:20:20 by varnaud           #+#    #+#             */
+/*   Updated: 2016/12/09 19:00:23 by varnaud          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdlib.h>
 #include "libft.h"
+#include "ft_bignum.h"
 #include <stdio.h>
+
 char	addchars(char n1, char n2, char *reminder)
 {
 	int		a;
@@ -15,18 +29,38 @@ char	addchars(char n1, char n2, char *reminder)
 	return (r + '0');
 }
 
-char	*ft_bigint_add(char *n1, char *n2)
+char	*ft_bignum_mtp(char *n1, int by)
+{
+	char	*result;
+
+	result = NULL;
+	while (by--)
+	{
+		free(result);
+		result = ft_bignum_add(n1, n1);
+	}
+	return (result);
+}
+
+char	*ft_bignum_add(char *n1, char *n2)
 {
 	char	*result;
 	char	*r;
 	char	reminder;
 	int		d1;
 	int		d2;
+	char	*q1 = n1;
+	char	*q2 = n2;
 
 	result = ft_strnew(ft_strlen(n1) + ft_strlen(n2) + 2 + 1);
 	r = result;
-	ft_strrev(n1);
-	ft_strrev(n2);
+	if (n1 != n2)
+	{
+		ft_strrev(n1);
+		ft_strrev(n2);
+	}
+	else
+		ft_strrev(n1);
 	d1 = ft_strichr(n1, '.');
 	d2 = ft_strichr(n2, '.');
 	if (d1 > d2)
@@ -42,7 +76,7 @@ char	*ft_bigint_add(char *n1, char *n2)
 		n2 += (d2 - d1);
 	}
 	reminder = '0';
-	printf("%d %d\n", d1, d2);
+	//printf("%d %d\n", d1, d2);
 	while (*n1 && *n2)
 	{
 		if (*n1 == '.' || *n2 == '.')
@@ -72,8 +106,13 @@ char	*ft_bigint_add(char *n1, char *n2)
 	}
 	if (reminder == '1')
 		*result = '1';
-	ft_strrev(n1);
-	ft_strrev(n2);
+	if (n1 != n2)
+	{
+		ft_strrev(n1);
+		ft_strrev(n2);
+	}
+	else
+		ft_strrev(q);
 	return (ft_strrev(r));
 }
 
