@@ -6,16 +6,15 @@
 /*   By: varnaud <varnaud@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 17:20:20 by varnaud           #+#    #+#             */
-/*   Updated: 2016/12/10 09:09:51 by varnaud          ###   ########.fr       */
+/*   Updated: 2017/01/14 18:51:56 by varnaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "libft.h"
 #include "ft_bignum.h"
-#include <stdio.h>
 
-char	addchars(char n1, char n2, char *reminder)
+static char	addchars(char n1, char n2, char *reminder)
 {
 	int		a;
 	int		b;
@@ -29,20 +28,20 @@ char	addchars(char n1, char n2, char *reminder)
 	return (r + '0');
 }
 
-char	*ft_bignum_mtp(char *n1, int by)
+char		*ft_bignum_mtp(const char *n1, int by)
 {
 	char	*result;
 
 	result = ft_itoa(0);
 	while (by--)
 	{
-		//free(result);
+		free(result);
 		result = ft_bignum_add(result, n1);
 	}
 	return (result);
 }
 
-char	*ft_bignum_add(char *n1, char *n2)
+char		*ft_bignum_add(const char *n1, const char *n2)
 {
 	char	*str1;
 	char	*str2;
@@ -73,7 +72,6 @@ char	*ft_bignum_add(char *n1, char *n2)
 		str2 += (d2 - d1);
 	}
 	reminder = '0';
-	//printf("%d %d\n", d1, d2);
 	while (*str1 && *str2)
 	{
 		if (*str1 == '.' || *str2 == '.')
@@ -103,19 +101,7 @@ char	*ft_bignum_add(char *n1, char *n2)
 	}
 	if (reminder == '1')
 		*result = '1';
+	free(&str1[-ft_strlen(n1) - 1]);
+	free(&str2[-ft_strlen(n2) - 1]);
 	return (ft_strrev(r));
 }
-
-/*
-int		main(int argc, char **argv)
-{
-	char	*result;
-
-	if (argc == 3)
-	{
-		result = ft_bignum_add(argv[1], argv[2]);
-		ft_putendl(result);
-		free(result);
-	}
-}
-*/
