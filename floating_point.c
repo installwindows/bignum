@@ -6,7 +6,7 @@
 /*   By: varnaud <varnaud@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 00:24:33 by varnaud           #+#    #+#             */
-/*   Updated: 2017/01/14 18:51:57 by varnaud          ###   ########.fr       */
+/*   Updated: 2017/01/15 18:40:00 by varnaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static char	*eval_exponent(unsigned long long num, int exponent, char *str)
 {
 	char	*tmp;
 
-	tmp = ft_bignum_mtp(str, 1 << exponent);
+	tmp = ft_strrev(ft_bignum_mtp(str, 1 << exponent));
 	free(str);
 	if (num & 0x8000000000000000ull)
 	{
@@ -31,7 +31,7 @@ static char	*eval_exponent(unsigned long long num, int exponent, char *str)
 	return (tmp);
 }
 
-char	*print_float(double d)
+char		*print_float(double d)
 {
 	int					i;
 	char				*str;
@@ -59,15 +59,15 @@ char	*print_float(double d)
 	return (eval_exponent(num, (num >> 52) - 1023, str));
 }
 
-int		main(int argc, char **argv)
+int			main(int argc, char **argv)
 {
 	char	*result;
 	double	n;
 
-	n = -70.1234;
+	n = 1.1;
 	if (argc == 3)
 	{
-		result = ft_bignum_add(argv[1], argv[2]);
+		result = ft_strrev(ft_bignum_add(ft_strrev(argv[1]), ft_strrev(argv[2])));
 		ft_putendl(result);
 		free(result);
 	}

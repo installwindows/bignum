@@ -6,7 +6,7 @@
 /*   By: varnaud <varnaud@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 17:20:20 by varnaud           #+#    #+#             */
-/*   Updated: 2017/01/14 18:51:56 by varnaud          ###   ########.fr       */
+/*   Updated: 2017/01/15 18:36:14 by varnaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,32 +31,49 @@ static char	addchars(char n1, char n2, char *reminder)
 char		*ft_bignum_mtp(const char *n1, int by)
 {
 	char	*result;
+	char	*tmp;
 
 	result = ft_itoa(0);
 	while (by--)
 	{
-		free(result);
+		tmp = result;
 		result = ft_bignum_add(result, n1);
+		free(tmp);
 	}
 	return (result);
 }
 
-char		*ft_bignum_add(const char *n1, const char *n2)
+static void	reminder(const char *str1, const char *str2, char *result)
 {
-	char	*str1;
-	char	*str2;
+	char	reminder;
+
+	reminder = '0';
+	while (*str1 && *str2)
+		if (*str1 == '.' || *str2 == '.')
+		{
+			str1 += *str1 == '.' ? 1 : 0;
+			str2 += *str2 == '.' ? 1 : 0;
+			*result++ = '.';
+		}
+		else
+			*result++ = addchars(*str1++, *str2++, &reminder);
+	while (*str1)
+		*result++ = addchars(*str1++, '0', &reminder);
+	while (*str2)
+		*result++ = addchars(*str2++, '0', &reminder);
+	if (reminder == '1')
+		*result = '1';
+}
+
+char		*ft_bignum_add(const char *str1, const char *str2)
+{
 	char	*result;
 	char	*r;
-	char	reminder;
 	int		d1;
 	int		d2;
 
-	str1 = ft_strdup(n1);
-	str2 = ft_strdup(n2);
-	result = ft_strnew(ft_strlen(n1) + ft_strlen(n2) + 2 + 1);
+	result = ft_strnew(ft_strlen(str1) + ft_strlen(str2) + 2 + 1);
 	r = result;
-	ft_strrev(str1);
-	ft_strrev(str2);
 	d1 = ft_strichr(str1, '.');
 	d2 = ft_strichr(str2, '.');
 	if (d1 > d2)
@@ -71,37 +88,6 @@ char		*ft_bignum_add(const char *n1, const char *n2)
 		result += (d2 - d1);
 		str2 += (d2 - d1);
 	}
-	reminder = '0';
-	while (*str1 && *str2)
-	{
-		if (*str1 == '.' || *str2 == '.')
-		{
-			*result = '.';
-			result++;
-			str1++;
-			str2++;
-			continue;
-		}
-		*result = addchars(*str1, *str2, &reminder);
-		result++;
-		str1++;
-		str2++;
-	}
-	while (*str1)
-	{
-		*result = addchars(*str1, '0', &reminder);
-		result++;
-		str1++;
-	}
-	while (*str2)
-	{
-		*result = addchars(*str2, '0', &reminder);
-		result++;
-		str2++;
-	}
-	if (reminder == '1')
-		*result = '1';
-	free(&str1[-ft_strlen(n1) - 1]);
-	free(&str2[-ft_strlen(n2) - 1]);
-	return (ft_strrev(r));
+	reminder(str1, str2, result);
+	return (r);
 }
